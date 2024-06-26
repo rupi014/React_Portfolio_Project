@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import  moment from "moment";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import axios from 'axios';
 
 import PortfolioContainer from './portfolio/portfolio-container'; 
 import NavigationContainer from './navigation/navigation-container';
@@ -11,8 +12,13 @@ import Blog from './pages/blog';
 import PortfolioDetail from './portfolio/portfolio-detail';
 import NoMatch from './pages/no-match.js';
 
+
 export default class App extends Component {
+
+
+
   render() {
+ 
     return (
       <div className='app'>
 
@@ -39,4 +45,5 @@ export default class App extends Component {
       </div>
     );
   }
-}
+} 
+
