@@ -13,18 +13,9 @@ export default class PortfolioContainer extends Component {
         };
 
         this.handleFilter = this.handleFilter.bind(this);   
-        this.getPortfolioItems = this.getPortfolioItems.bind(this);
 
     }
 
-    portfolioItems() {
-        return this.state.data.map(item => {
-            return <PortfolioItem 
-            key={item.id} 
-            item={item} 
-            />  
-        })
-    }
 
     handleFilter(filter) {
         this.setState({
@@ -43,7 +34,17 @@ export default class PortfolioContainer extends Component {
         .catch(error => {
           console.log(error);
         })
-      };
+    };
+
+    portfolioItems() {
+        return this.state.data.map(item => {
+            return <PortfolioItem 
+            key={item.id} 
+            item={item} 
+            />  
+        })
+    }
+
 
     componentDidMount() {
       this.getPortfolioItems();
@@ -57,16 +58,17 @@ export default class PortfolioContainer extends Component {
 
 
         return (
-            <div>
-                <h2>{this.state.pageTitle}</h2>
+            
+            <div className="portfolio-items-wrapper">
 
-                <button onClick={() => this.handleFilter("eCommerce")}>eCommerce</button>
-                <button onClick={() => this.handleFilter("Scheduling")}>Scheduling</button>
-                <button onClick={() => this.handleFilter("EnterPrise")}>EnterPrise</button>
+            <button className="btn" onClick={() => this.handleFilter("eCommerce")}>eCommerce</button>
+            <button className="btn" onClick={() => this.handleFilter("Scheduling")}>Scheduling</button>
+            <button className="btn" onClick={() => this.handleFilter("EnterPrise")}>EnterPrise</button>
 
-                {this.portfolioItems()}
-
+            {this.portfolioItems()}
             </div>
+
+        
         )
     }
 }
