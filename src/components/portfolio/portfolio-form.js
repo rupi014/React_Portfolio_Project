@@ -1,5 +1,10 @@
 import React, { Component } from "react";
 import axios from "axios";
+import DropzoneComponent from "react-dropzone-component";
+
+import "../../../node_modules/react-dropzone-component/styles/filepicker.css";
+import "../../../node_modules/dropzone/dist/min/dropzone.min.css";
+
 
 export default class PortfolioForm extends Component {
     constructor(props) {
@@ -17,7 +22,52 @@ export default class PortfolioForm extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.djsConfig = this.djsConfig.bind(this);
+        this.componentConfig = this.componentConfig.bind(this);
+        this.handleThumbDrop = this.handleThumbDrop.bind(this);
+        this.handleBannerDrop = this.handleBannerDrop.bind(this);
+        this.handleLogoDrop = this.handleLogoDrop.bind(this);
+
+        this.thumbRef = React.createRef();
+        this.bannerRef = React.createRef();
+        this.logoRef = React.createRef();
+
       }
+
+    
+
+    handleThumbDrop() {
+      return {
+        addedfile: file => this.setState({thumb_image: file})
+      }
+    }
+
+    handleBannerDrop() {
+      return {
+        addedfile: file => this.setState({banner_image: file})
+      }
+    }
+
+   handleLogoDrop() {
+      return {
+        addedfile: file => this.setState({logo: file})
+      }
+    }
+
+    componentConfig() {
+      return {
+        iconFiletypes: [".jpeg", ".jpg", ".png"],
+        showFiletypeIcon: true,
+        postUrl: "https://httpbin.org/post"
+      }
+    }
+
+    djsConfig() {
+      return {
+        addRemoveLinks: true,
+        maxxFiles: 1
+      }
+    }
     
 
     buildForm() {
@@ -29,6 +79,17 @@ export default class PortfolioForm extends Component {
       formData.append('portfolio_item[description]', this.state.description);
       formData.append('portfolio_item[position]', this.state.position);
 
+      if (this.state.thumb_image) {
+        formData.append('portfolio_item[thumb_image]', this.state.thumb_image);
+      }
+      if (this.state.banner_image) {
+        formData.append('portfolio_item[banner_image]', this.state.banner_image);
+      }
+      if (this.state.logo) {
+        formData.append('portfolio_item[logo]', this.state.logo);
+      }
+      
+      
       return formData;
     }
 
@@ -43,7 +104,21 @@ export default class PortfolioForm extends Component {
         withCredentials: true
       }).then(response => {
         this.props.handleSuccessfulFormSubmission(response.data.portfolio_item);
-        console.log("response", response);
+
+        this.setState({
+          name: '',
+          description: '',
+          category: 'Technology',
+          position: '',
+          url: '',
+          thumb_image: '',
+          banner_image: '',
+          logo: ''
+        });
+
+        [this.thumbRef, this.bannerRef, this.logoRef].forEach(ref => {
+          ref.current.dropzone.removeAllFiles();
+        });
       }).catch(error => {
         console.log("portfolio form handleSubmit error", error);
       });
@@ -55,11 +130,8 @@ export default class PortfolioForm extends Component {
 
     render() {
       return ( 
-        <div className="portfolio-form-wrapper">
 
-          <h1>Portfolio Form</h1>
-
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit} className="portfolio-form-wrapper">
             <div>
               <input type="text" name="name" placeholder="Portfolio Item Name" value={this.state.name} onChange={this.handleChange} />
               <input type="text" name="url" placeholder="URL" value={this.state.url} onChange={this.handleChange} />
@@ -67,7 +139,7 @@ export default class PortfolioForm extends Component {
             <div>
               <input type="text" name="position" placeholder="Position" value={this.state.position} onChange={this.handleChange} />
 
-              <select name="category" value={this.state.category} onChange={this.handleChange}>
+              <select name="category" value={this.state.category} onChange={this.handleChange} className="select-element">
 
                 <option value="Technology">Technology</option>
                 <option value="Education">Education</option>
@@ -79,12 +151,37 @@ export default class PortfolioForm extends Component {
               <textarea type="text" name="description" placeholder="Description" value={this.state.description} onChange={this.handleChange} />
             </div>
 
+            <div className="image-uploaders">
+              <DropzoneComponent
+                ref={this.thumbRef} 
+                config={this.componentConfig()}
+                djsConfig={this.djsConfig()}
+                eventHandlers={this.handleThumbDrop()}
+              >
+              </DropzoneComponent>
+
+              <DropzoneComponent 
+                ref={this.bannerRef}
+                config={this.componentConfig()}
+                djsConfig={this.djsConfig()}
+                eventHandlers={this.handleBannerDrop()}
+              >
+              </DropzoneComponent>
+
+              <DropzoneComponent 
+                ref={this.logoRef}
+                config={this.componentConfig()}
+                djsConfig={this.djsConfig()}
+                eventHandlers={this.handleLogoDrop()}
+              >
+              </DropzoneComponent>
+            </div>
+
             <div>
               <button typu="submit">Save</button>
             </div>
           </form>
           
-        </div>
       )
     }
 }
