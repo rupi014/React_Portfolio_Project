@@ -23,6 +23,12 @@ export default class BlogModal extends Component {
             }
 
         }
+
+        this.hanleSuccessfullFormSubmission = this.hanleSuccessfullFormSubmission.bind(this);
+    }
+
+    hanleSuccessfullFormSubmission(blog) {
+        this.props.handleSuccessfullNewBlogSubmission(blog);    
     }
 
     render() {
@@ -32,7 +38,7 @@ export default class BlogModal extends Component {
             onRequestClose={() => {
                 this.props.handleModalClose();
             }} isOpen={this.props.modalIsOpen}>
-                <BlogForm />
+                <BlogForm hanleSuccessfullFormSubmission={this.hanleSuccessfullFormSubmission} />
             </ReactModal>
         )
     }
