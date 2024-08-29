@@ -11,5 +11,14 @@
     .image-upload-wrapper {
         @include base-grid();
         grid-template-columns: 200px;
+
+        .portfolio-manager-image-wrapper {
+            img {
+                width: 100%;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 5px;
+            }
+        }
     }
 }
