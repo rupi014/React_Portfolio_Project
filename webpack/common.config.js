@@ -8,7 +8,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.js', '.scss'],
+    extensions: ['.js', '.scss', '.css'],
 
     modules: ['node_modules'],
   },
@@ -20,6 +20,7 @@ module.exports = {
         exclude: /node_modules/,
         use: ['babel-loader'],
       },
+
 
       {
         type: 'javascript/auto',
