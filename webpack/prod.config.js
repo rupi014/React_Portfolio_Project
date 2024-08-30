@@ -11,62 +11,50 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = webpackMerge(webpackCommon, {
-  bail: true,
-
-  devtool: "source-map",
-  mode: "production",
-  output: {
-    path: path.resolve(__dirname, "../dist"),
-
-    filename: "[name]-[hash].min.js",
-
-    sourceMapFilename: "[name]-[hash].map",
-
-    chunkFilename: "[id]-[chunkhash].js",
-
-    publicPath: "/"
-  },
-
+  // ...
   module: {
     rules: [
       {
         test: /\.s?css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: [
-            {
-              loader: "css-loader",
-              options: {
-                sourceMap: true,
-                importLoaders: 2
-              }
-            },
-            {
-              loader: "postcss-loader",
-              options: {
-                config: {
-                  path: path.resolve(__dirname, "postcss.config.js")
-                },
-                sourceMap: true
-              }
-            },
-            {
-              loader: "sass-loader",
-              options: {
-                outputStyle: "expanded",
-                sourceMap: true,
-                sourceMapContents: true
-              }
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: true,
+              importLoaders: 2
             }
-          ]
-        })
+          },
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                config: path.resolve(__dirname, "postcss.config.js")
+              },
+              sourceMap: true
+            }
+          },
+          {
+            loader: "sass-loader",
+            options: {
+              sourceMap: true,
+            }
+          }
+        ]
       }
     ]
   },
-
   plugins: [
+    // ...
+    new MiniCssExtractPlugin({
+      filename: "[name]-[chunkhash].min.css",
+    }),
+    // ...
+  ]
+});
     new HtmlWebpackPlugin({
       inject: true,
       template: path.resolve(__dirname, "../static/index.html"),
