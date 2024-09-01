@@ -19,6 +19,7 @@ module.exports = webpackMerge(webpackCommon, {
   devtool: 'source-map',
   mode: 'production',
   output: {
+    
 
     path: path.resolve(__dirname, '../dist'),
 
