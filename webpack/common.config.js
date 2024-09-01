@@ -36,11 +36,6 @@ module.exports = {
         test: /\.(mp4|webm)$/,
         loader: 'url?limit=10000',
       },
-
-      {
-        test: /\.(css|scss)$/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
-      },
     ],
   },
 
